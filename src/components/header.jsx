@@ -1,0 +1,82 @@
+import { useEffect, useState, useRef } from 'react'
+import { useNavigate } from 'react-router';
+import supabase from '../helper/supabaseClient';
+import { Link } from "react-router-dom";
+import './header.css';
+
+export default function Header() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw error;
+      setUser(data.user);
+    };
+    getUser();
+  }, []);
+
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    navigate("/login");
+  };
+
+  const toggleMenu = () => setMenuOpen((s) => !s);
+
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (!menuRef.current) return;
+      if (!menuRef.current.contains(e.target)) setMenuOpen(false);
+    };
+    const onEsc = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('keydown', onEsc);
+    return () => {
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onEsc);
+    };
+  }, []);
+
+  return (
+    <div className="header">
+        <div className="siteName">ThingsTo</div>
+        <div className="navLinks">
+            <ul>
+                <li><Link className="Link" to="/todo">To-Do&rsquo;s</Link></li>
+                {/* <li><Link className="Link" to="/note">To Note</Link></li> */}
+                {/* <li><Link className="Link" to="/log">to Log</Link></li> */}
+                {/* <li><Link className="Link" to="/remember">To Remember</Link></li> */}
+            </ul>
+            {/* <a href="/dashboard">Dashboard</a>
+            <a href="/login">Login</a>
+            <a href="/register">Register</a> */}
+        </div>
+        <div className="userInfo">
+          <div
+            className="userWelcome"
+            onClick={toggleMenu}
+            role="button"
+            tabIndex={0}
+            aria-expanded={menuOpen}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMenu(); }}
+            ref={menuRef}
+          >
+            {user?.email || "User"}
+            {menuOpen && (
+              <div className="userAccountMenu">
+              <div className="accountOption"><Link className="Link" to="/profile">Profile</Link></div>
+              <div className="accountOption"><Link className="Link" to="/account">Account</Link></div>
+              <div className="accountOption"><Link className="Link" to="/settings">Settings</Link></div>
+              <div className="accountOption" onClick={signOut}>Sign out</div>
+              </div>
+            )}
+          </div>
+        </div>
+    </div>
+  );
+}
+

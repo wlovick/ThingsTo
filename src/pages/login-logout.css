@@ -1,0 +1,59 @@
+.login-register {
+    display: flex;
+    /* display: none; */
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.username-input, .password-input {
+    box-sizing: border-box;
+    padding: 12px 20px;
+    width: 100%;
+    background: none;
+    border: 2px solid var(--secondary-color);
+    border-radius: 1000px;
+    font: inherit;
+    color: var(--text-color);
+}
+.username-input::placeholder, .password-input::placeholder {
+    color: var(--secondary-color);
+}
+.username-input:focus, .password-input:focus {
+    outline: none;
+}
+.login-button, .register-button {
+    background-color: var(--accent-color);
+    padding: 15px;
+    border: none;
+    border-radius: 1000px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--background);
+    cursor: pointer;
+}
+.login-button:hover, .register-button:hover {
+    background-color: var(--accent-color-dark);
+}
+
+.logout-button {
+    background-color: var(--accent-color);
+    padding: 15px;
+    border: none;
+    border-radius: 1000px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--background);
+    cursor: pointer;
+}
+.logout-button:hover {
+    background-color: var(--accent-color-dark);
+}
+
+.Link {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+.Link:hover {
+    color: var(--accent-color-dark);
+    text-decoration: underline;
+}

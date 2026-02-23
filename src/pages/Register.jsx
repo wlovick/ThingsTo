@@ -1,0 +1,66 @@
+// import React from "react";
+import { useState } from "react";
+import supabase from "../helper/supabaseClient";
+import { Link, useNavigate } from "react-router-dom";
+import './login-logout.css';
+
+function Register() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setMessage("");
+
+    const { data, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    if (data) {
+      setMessage("User account created!");
+      navigate("/todos");
+    }
+
+    setEmail("");
+    setPassword("");
+  };
+
+  return (
+    <div>
+      <h2>Register</h2>
+      <br></br>
+      {message && <span>{message}</span>}
+      <form className="login-register" onSubmit={handleSubmit}>
+        <input
+          className="username-input"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          type="email"
+          placeholder="Email"
+          required
+        />
+        <input
+          className="password-input"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          type="password"
+          placeholder="Password"
+          required
+        />
+        <button className="login-button" type="submit">Create Account</button>
+      </form>
+      <span>Already have an account? </span>
+      <Link className="Link" to="/login">Log in.</Link>
+    </div>
+  );
+}
+
+export default Register;
