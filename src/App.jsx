@@ -1,6 +1,7 @@
 // import React from "react";
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "/src/components/header";
 
 import Home from "./pages/Login";
 import Register from "./pages/Register";
@@ -26,6 +27,7 @@ function App() {
           path="/todos"
           element={
             <Wrapper>
+              <Header />
               <Todos />
             </Wrapper>
           }

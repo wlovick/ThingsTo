@@ -3,7 +3,14 @@
     padding: 0;
     box-sizing: border-box;
 }
-
+:root {
+    --background: #101114;
+    --primary-color: #1c1d20;
+    --secondary-color: #4a4d57;
+    --accent-color: #00ff22;
+    --accent-color-dark: #00670e;
+    --text-color: #f9f9f9;
+}
 .header {
     display: flex;
     justify-content: space-between;
@@ -40,6 +47,14 @@
     color: var(--accent-color);
     cursor: pointer;
 }
+.userInfo svg {
+    width: 40px;
+    height: 40px;
+    stroke: var(--accent-color);
+}
+.userInfo:hover svg {
+    stroke: var(--accent-color-dark);
+}
 
 .userWelcome {
     padding-right: 20px;
@@ -58,6 +73,7 @@
     border-radius: 6px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.08);
     z-index: 50;
+    text-align: right;
 }
 
 .accountOption {
@@ -69,4 +85,10 @@
 .accountOption:hover {
     color: var(--accent-color-dark);
     text-decoration: underline;
+}
+.accountOptionUser {
+    padding: 8px 14px;
+    cursor: default;
+    color: var(--text-color);
+    display: block;
 }

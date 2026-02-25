@@ -46,7 +46,7 @@ export default function Header() {
         <div className="siteName">ThingsTo</div>
         <div className="navLinks">
             <ul>
-                <li><Link className="Link" to="/todo">To-Do&rsquo;s</Link></li>
+                <li><Link className="Link" to="/todos">To-Do&rsquo;s</Link></li>
                 {/* <li><Link className="Link" to="/note">To Note</Link></li> */}
                 {/* <li><Link className="Link" to="/log">to Log</Link></li> */}
                 {/* <li><Link className="Link" to="/remember">To Remember</Link></li> */}
@@ -65,12 +65,15 @@ export default function Header() {
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMenu(); }}
             ref={menuRef}
           >
-            {user?.email || "User"}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M7 6h10M4 12h16M7 12h13M7 18h10"/>
+            </svg>
             {menuOpen && (
               <div className="userAccountMenu">
-              <div className="accountOption"><Link className="Link" to="/profile">Profile</Link></div>
-              <div className="accountOption"><Link className="Link" to="/account">Account</Link></div>
-              <div className="accountOption"><Link className="Link" to="/settings">Settings</Link></div>
+              <div className="accountOptionUser">{user?.email || "User"}</div>
+              <div className="accountOption"><Link className="Link" to="../pages/userInfo/profile">Profile</Link></div>
+              <div className="accountOption"><Link className="Link" to="../pages/userInfo/account">Account</Link></div>
+              <div className="accountOption"><Link className="Link" to="../pages/userInfo/settings">Settings</Link></div>
               <div className="accountOption" onClick={signOut}>Sign out</div>
               </div>
             )}
@@ -80,3 +83,4 @@ export default function Header() {
   );
 }
 
+     
