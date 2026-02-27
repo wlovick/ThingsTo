@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
 import supabase from '../helper/supabaseClient';
-import { Link } from "react-router-dom";
+import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import './header.css';
 
 export default function Header() {
@@ -43,7 +44,7 @@ export default function Header() {
 
   return (
     <div className="header">
-        <div className="siteName">ThingsTo</div>
+        <div><Link to="/home" className="siteName">ThingsTo</Link></div>
         <div className="navLinks">
             <ul>
                 <li><Link className="Link" to="/todos">To-Do&rsquo;s</Link></li>
@@ -70,11 +71,11 @@ export default function Header() {
             </svg>
             {menuOpen && (
               <div className="userAccountMenu">
-              <div className="accountOptionUser">{user?.email || "User"}</div>
-              <div className="accountOption"><Link className="Link" to="../pages/userInfo/profile">Profile</Link></div>
-              <div className="accountOption"><Link className="Link" to="../pages/userInfo/account">Account</Link></div>
-              <div className="accountOption"><Link className="Link" to="../pages/userInfo/settings">Settings</Link></div>
-              <div className="accountOption" onClick={signOut}>Sign out</div>
+                <div className="accountOptionUser">{user?.email || "User"}</div>
+                <div className="accountOption"><CustomLink className="Link" to="../pages/userInfo/profile">Profile</CustomLink></div>
+                <div className="accountOption"><CustomLink className="Link" to="../pages/userInfo/account">Account</CustomLink></div>
+                <div className="accountOption"><CustomLink className="Link" to="../pages/userInfo/settings">Settings</CustomLink></div>
+                <div className="accountOption" onClick={signOut}>Sign out</div>
               </div>
             )}
           </div>
@@ -82,5 +83,20 @@ export default function Header() {
     </div>
   );
 }
+
+function CustomLink({ to, children, ...props }) {
+    const resolvedPath = useResolvedPath(to);
+    const isActive = useMatch({ path: resolvedPath.pathname, end: true });
+    return (
+        <li className={isActive ? "active" : ""}>
+            <Link className="Link" to={to} {...props}>{children}</Link>
+        </li>
+    )
+}
+
+CustomLink.propTypes = {
+    to: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired,
+};
 
      

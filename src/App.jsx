@@ -1,39 +1,23 @@
 // import React from "react";
 import './App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "/src/components/header";
-
-import Home from "./pages/Login";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
 import Todos from "./pages/Todos";
 import Wrapper from "./pages/Wrapper";
 
+import { Routes, Route } from "react-router-dom";
+
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* home */}
-        <Route path="/" element={<Home />} />
-
-        {/* register */}
-        <Route path="/register" element={<Register />} />
-
-        {/* login */}
-        <Route path="/login" element={<Login />} />
-
-        {/* todos */}
-        <Route
-          path="/todos"
-          element={
-            <Wrapper>
-              <Header />
-              <Todos />
-            </Wrapper>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <Wrapper>
+        <Header />
+        <div className="container">
+          <Routes>
+            <Route path="/todos" element={<Todos />} />
+          </Routes>
+        </div>
+      </Wrapper>
+    </>
   );
 }
 
