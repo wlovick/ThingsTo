@@ -1,0 +1,27 @@
+.home {
+    text-align: center;
+    padding: 50px;
+    text-wrap: balance;
+}
+
+.loginRegisterLinks {
+    margin: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 200ms ease-in-out;
+    text-align: center;
+}
+.button:hover {
+    background-color: var(--accent-color-dark);
+}

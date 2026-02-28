@@ -17,7 +17,7 @@
     align-items: center;
     padding: 0px;
     margin: 0;
-    width: 100%;
+    width: 100vw;
     /* background-color: gray; */
 }
 
@@ -85,10 +85,21 @@
     color: var(--accent-color);
     display: block;
     transition: color 200ms ease-in-out;
+    text-decoration: none;
 }
 .accountOption:hover {
     color: var(--accent-color-dark);
+}
+.accountLink {
+    padding: 0px;
+    cursor: pointer;
+    color: var(--accent-color);
+    display: block;
+    transition: color 200ms ease-in-out;
     text-decoration: none;
+}
+.accountLink:hover {
+    color: var(--accent-color-dark);
 }
 .accountOptionUser {
     padding: 8px 14px;

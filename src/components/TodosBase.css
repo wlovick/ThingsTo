@@ -72,7 +72,7 @@ h1 {
 #todo-input:focus {
     outline: none;
 }
-form {position: relative;}
+/* form {position: relative;} */
 #add-button {
     position: absolute;
     top: 0;

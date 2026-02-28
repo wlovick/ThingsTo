@@ -34,7 +34,7 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Login</h2>
       <br></br>
       {message && <span>{message}</span>}
