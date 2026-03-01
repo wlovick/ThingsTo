@@ -65,7 +65,14 @@ h1 {
     font: inherit;
     color: var(--text-color);
     caret-color: var(--accent-color);
+
 }
+@media screen and (max-width: 600px) {
+    #todo-input {
+        padding: 12px 20px;
+    }
+}
+
 #todo-input::placeholder {
     color: var(--secondary-color);
 }
