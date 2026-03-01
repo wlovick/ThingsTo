@@ -9,6 +9,7 @@ export default function Header() {
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const [authenticated, setAuthenticated] = useState("");
 
   useEffect(() => {
     const getUser = async () => {
@@ -18,7 +19,17 @@ export default function Header() {
     };
     getUser();
   }, []);
+  
+  useEffect(() => {
+    const getSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setAuthenticated(session);
+    };
 
+    getSession();
+  }, []);
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
@@ -68,9 +79,10 @@ export default function Header() {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M7 6h10M4 12h16M7 12h13M7 18h10"/>
             </svg>
-            {menuOpen && (
+            {menuOpen && authenticated && (
               <div className="userAccountMenu">
                 <div className="accountOptionUser">{user?.email || "User"}</div>
+                <div className="accountOptionUser">{user?.session || "Session"}</div>
                 <div className="accountOption"><Link className="accountLink" to="../pages/userInfo/profile">Profile</Link></div>
                 <div className="accountOption"><Link className="accountLink" to="../pages/userInfo/account">Account</Link></div>
                 <div className="accountOption"><Link className="accountLink" to="../pages/userInfo/settings">Settings</Link></div>

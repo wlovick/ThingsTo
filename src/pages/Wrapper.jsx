@@ -1,5 +1,5 @@
 // import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import PropTypes from "prop-types";
 import supabase from "../helper/supabaseClient";
 import { Navigate } from "react-router-dom";
@@ -26,7 +26,7 @@ function Wrapper({ children }) {
     if (authenticated) {
       return <>{children}</>;
     }
-    return <Navigate to="/Home" />;
+    return <Navigate to="/" />;
   }
 }
 
