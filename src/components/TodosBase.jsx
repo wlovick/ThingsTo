@@ -14,8 +14,9 @@ export default function TodosBase() {
     const inputRef = useRef(null);
     const [user, setUser] = useState(null);
 
-    // Fetch user and todos
+    // Fetch user and todos, and subscribe to realtime updates
     useEffect(() => {
+        let todosSubscription = null;
         async function fetchUserAndTodos() {
             const currentUser = await getCurrentUser();
             setUser(currentUser);
@@ -26,11 +27,39 @@ export default function TodosBase() {
                     .eq('user_id', currentUser.id)
                     .eq('deleted', false)
                     .order('id', { ascending: true });
+
                 if (!error) setTodos(data || []);
+
+            // Subscribe to realtime changes for this user's todos
+            todosSubscription = supabase.channel('todos-realtime')
+                .on(
+                    'postgres_changes',
+                    {
+                        event: '*',
+                        schema: 'public',
+                        table: 'todos',
+                        filter: `user_id=eq.${currentUser.id}`
+                    },
+                    (payload) => {
+                        if (payload.eventType === 'INSERT') {
+                            setTodos((prev) => [...prev, payload.new]);
+                        } else if (payload.eventType === 'UPDATE') {
+                            setTodos((prev) => prev.map((t) => t.id === payload.new.id ? { ...t, ...payload.new } : t));
+                        } else if (payload.eventType === 'DELETE') {
+                            setTodos((prev) => prev.filter((t) => t.id !== payload.old.id));
+                        }
+                    }
+                )
+                .subscribe();
+                }
             }
-        }
-        fetchUserAndTodos();
-    }, []);
+            fetchUserAndTodos();
+            return () => {
+                if (todosSubscription) {
+                    supabase.removeChannel(todosSubscription);
+                }
+            };
+        }, []);
 
     // Add todo
     async function handleAddTodo(e) {

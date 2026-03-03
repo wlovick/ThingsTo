@@ -37,6 +37,9 @@
     font-weight: bold;
     color: var(--accent-color);
 }
+.navLinks li {
+    list-style: none;
+}
 
 .userInfo {
     display: flex;
