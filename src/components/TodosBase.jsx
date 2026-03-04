@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { useCallback } from 'react';
 import supabase from '../helper/supabaseClient';
 import './TodosBase.css';
 
@@ -11,63 +10,27 @@ async function getCurrentUser() {
 
 export default function TodosBase() {
     const [todos, setTodos] = useState([]);
-    const dragItem = useRef();
-    const dragOverItem = useRef();
     const [input, setInput] = useState("");
     const inputRef = useRef(null);
     const [user, setUser] = useState(null);
 
-    // Fetch user and todos, and subscribe to realtime updates
+    // Fetch user and todos
     useEffect(() => {
-        let todosSubscription = null;
         async function fetchUserAndTodos() {
             const currentUser = await getCurrentUser();
             setUser(currentUser);
             if (currentUser) {
-
                 const { data, error } = await supabase
                     .from('todos')
                     .select('*')
                     .eq('user_id', currentUser.id)
                     .eq('deleted', false)
-                    .order('position', { ascending: true });
-
+                    .order('id', { ascending: true });
                 if (!error) setTodos(data || []);
-
-            // Subscribe to realtime changes for this user's todos
-            todosSubscription = supabase.channel('todos-realtime')
-                .on(
-                    'postgres_changes',
-                    {
-                        event: '*',
-                        schema: 'public',
-                        table: 'todos',
-                        filter: `user_id=eq.${currentUser.id}`
-                    },
-                    (payload) => {
-                        if (payload.eventType === 'INSERT') {
-                            setTodos((prev) => [...prev, payload.new].sort((a, b) => (a.position ?? 0) - (b.position ?? 0)));
-                        } else if (payload.eventType === 'UPDATE') {
-                            if (payload.new.deleted) {
-                                setTodos((prev) => prev.filter((t) => t.id !== payload.new.id));
-                            } else {
-                                setTodos((prev) => prev.map((t) => t.id === payload.new.id ? { ...t, ...payload.new } : t).sort((a, b) => (a.position ?? 0) - (b.position ?? 0)));
-                            }
-                        } else if (payload.eventType === 'DELETE') {
-                            setTodos((prev) => prev.filter((t) => t.id !== payload.old.id));
-                        }
-                    }
-                )
-                .subscribe();
-                }
             }
-            fetchUserAndTodos();
-            return () => {
-                if (todosSubscription) {
-                    supabase.removeChannel(todosSubscription);
-                }
-            };
-        }, []);
+        }
+        fetchUserAndTodos();
+    }, []);
 
     // Add todo
     async function handleAddTodo(e) {
@@ -75,44 +38,17 @@ export default function TodosBase() {
         if (!user) return;
         const todoText = input.trim();
         if (todoText.length > 0) {
-            // Find max position
-            const maxPosition = todos.length > 0 ? Math.max(...todos.map(t => t.position ?? 0)) : 0;
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('todos')
-                .insert([{ text: todoText, completed: false, user_id: user.id, position: maxPosition + 1 }]);
-            if (!error) {
+                .insert([{ text: todoText, completed: false, user_id: user.id }])
+                .select();
+            if (!error && data) {
+                setTodos([...todos, ...data]);
                 setInput("");
                 inputRef.current?.focus();
             }
         }
     }
-
-    // Drag and drop handlers
-    const handleDragStart = (idx) => {
-        dragItem.current = idx;
-    };
-
-    const handleDragEnter = (idx) => {
-        dragOverItem.current = idx;
-    };
-
-    const handleDragEnd = useCallback(async () => {
-        const fromIdx = dragItem.current;
-        const toIdx = dragOverItem.current;
-        if (fromIdx === undefined || toIdx === undefined || fromIdx === toIdx) return;
-        const updatedTodos = [...todos];
-        const [removed] = updatedTodos.splice(fromIdx, 1);
-        updatedTodos.splice(toIdx, 0, removed);
-        // Update positions in DB and state
-        const updates = updatedTodos.map((todo, idx) => ({ id: todo.id, position: idx }));
-        setTodos(updatedTodos.map((todo, idx) => ({ ...todo, position: idx })));
-        // Batch update positions
-        for (const update of updates) {
-            await supabase.from('todos').update({ position: update.position }).eq('id', update.id);
-        }
-        dragItem.current = undefined;
-        dragOverItem.current = undefined;
-    }, [todos]);
 
     // Edit todo
     async function handleEditTodo(idx) {
@@ -186,15 +122,7 @@ export default function TodosBase() {
                 {todos.map((todo, idx) => {
                     const todoId = `todo-${todo.id || idx}`;
                     return (
-                        <li
-                            className="todo"
-                            key={todoId}
-                            draggable
-                            onDragStart={() => handleDragStart(idx)}
-                            onDragEnter={() => handleDragEnter(idx)}
-                            onDragEnd={handleDragEnd}
-                            onDragOver={e => e.preventDefault()}
-                        >
+                        <li className="todo" key={todoId}>
                             <input
                                 type="checkbox"
                                 id={todoId}
