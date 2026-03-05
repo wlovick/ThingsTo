@@ -1,0 +1,7 @@
+.footer {
+    position: relative;
+    bottom: 5px;
+    color: var(--secondary-color);
+    text-align: center;
+    font-size: 0.6rem;
+}
