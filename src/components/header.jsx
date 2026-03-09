@@ -59,7 +59,7 @@ export default function Header() {
             <ul>
                 <li><Link className="Link" to="/todos">To-Do&rsquo;s</Link></li>
                 {/* <li><Link className="Link" to="/note">To Note</Link></li> */}
-                {/* <li><Link className="Link" to="/log">to Log</Link></li> */}
+                <li><Link className="Link" to="/logs">To Log</Link></li>
                 {/* <li><Link className="Link" to="/remember">To Remember</Link></li> */}
             </ul>
             {/* <a href="/dashboard">Dashboard</a>

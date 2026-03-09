@@ -1,22 +1,5 @@
-:root {
-    --background: #101114;
-    --primary-color: #1c1d20;
-    --secondary-color: #4a4d57;
-    --accent-color: #00ff22;
-    --accent-color-dark: #00670e;
-    --text-color: #f9f9f9;
-}
-* {
-    margin: 0;
-    padding: 0;
-}
-html {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 16pt;
-    color: var(--text-color);
-}
 body {
-    min-height: 100vh;
+    height: 100vh;
     padding: 10px;
     background-color: var(--background);
     display: flex;

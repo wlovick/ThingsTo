@@ -2,9 +2,9 @@
 // import { useState, useEffect } from "react";
 // import supabase from "../helper/supabaseClient";
 // import { useNavigate } from "react-router-dom";
-import TodosBase from "../components/TodosBase";
+import LogBase from "../components/LogBase";
 
-function Todos() {
+function Logs() {
   // const navigate = useNavigate();
   // const [user, setUser] = useState(null);
 
@@ -26,10 +26,10 @@ function Todos() {
   return (
     <div style={{ width: "100vw", height: "100vh", padding: 0, margin: 0 }}>
       <div style={{ width: "100%", marginLeft: "auto", marginRight: "auto", paddingTop: 20 }}>
-        {TodosBase()}
+        {LogBase()}
       </div>
     </div>
   );
 }
 
-export default Todos;
+export default Logs;
